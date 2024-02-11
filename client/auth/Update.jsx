@@ -13,10 +13,13 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser } from '../store/reducer'
 import { useRef, useState } from 'react'
+import useShowToast from '../hook/ShowToast';
 
 
 export default function UserProfileEdit() {
     const dispatch = useDispatch()
+    const showToast = useShowToast()
+    const [sumbit , SetSubmit] = useState(false)
     const user = useSelector(state => state.user.isUser)
     const [inputs, setInputs] = useState({
         name: user?.name || "",
@@ -27,9 +30,22 @@ export default function UserProfileEdit() {
         profilePic : user?.profilePic || ""
     })
     const fileref = useRef(null)
+    const handleChange = (e) => {
+      const file = e.target.files[0]
+      const maxSize = 100 * 1024;
+      if(file.size > maxSize) {
+        showToast("filesize is too large" ,"warning")
+        fileref.current.value = '';
+        return;
+      } else {
+          setInputs({...inputs , profilePic : e.target.files[0]})
+      }
+    }
 
     const handleUpdate = async (e) => {
         e.preventDefault()
+        if (sumbit) return;
+		SetSubmit(true);
         const formdata = new FormData();
         formdata.append("profilePic", inputs.profilePic)
         formdata.append("name", inputs.name)
@@ -37,8 +53,6 @@ export default function UserProfileEdit() {
         formdata.append("email", inputs.email)
         formdata.append("bio", inputs.bio)
         formdata.append("password", inputs.password)
-        console.log(user.id)
-        
         try {
             const request = await fetch(`/api/user/update/${user.id}`,{
                 method: "PUT",
@@ -51,6 +65,8 @@ export default function UserProfileEdit() {
             
         } catch (err) {
             console.log(err)
+        } finally {
+           SetSubmit(false)
         }
   
     }
@@ -72,14 +88,14 @@ export default function UserProfileEdit() {
                         User Profile Edit
                     </Heading>
                     <FormControl id="userName">
-                        <FormLabel>User Icon</FormLabel>
+                        <FormLabel>User Icon / less than 100kb</FormLabel>
                         <Stack direction={['column', 'row']} spacing={6}>
                             <Center>
-                                <Avatar size="xl" src={user.profilePic} />
+                                <Avatar size="xl" src={user?.profilePic} />
                             </Center>
                             <Center w="full">
                                 <Button w="full" onClick={() => fileref.current.click()}>Change Icon</Button>
-                                <input type="file" hidden ref={fileref} onChange={(e) => setInputs({...inputs , profilePic : e.target.files[0]})} />
+                                <input type="file" hidden ref={fileref} onChange={handleChange} />
                             </Center>
                         </Stack>
                     </FormControl>
@@ -114,7 +130,7 @@ export default function UserProfileEdit() {
                         />
                     </FormControl>
                     <FormControl id="email">
-                        <FormLabel>Email address</FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <Input
                             placeholder="elon@gmail.com"
                             _placeholder={{ color: 'gray.500' }}
@@ -138,6 +154,8 @@ export default function UserProfileEdit() {
                         <Button
                             bg={'green.400'}
                             color={'white'}
+                            isLoading={sumbit}
+                            loadingText='Submitting'
                             w="full"
                             type='submit'
                             _hover={{
