@@ -11,15 +11,16 @@ import {
     Center,
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setUser } from '../store/reducer'
+import { setUser } from '../../store/reducer'
 import { useRef, useState } from 'react'
 import useShowToast from '../hook/ShowToast';
 
 
-export default function UserProfileEdit() {
+export default function Update() {
     const dispatch = useDispatch()
+    const [showUrl, setShowUrl] = useState(null)
     const showToast = useShowToast()
-    const [sumbit , SetSubmit] = useState(false)
+    const [sumbit, SetSubmit] = useState(false)
     const user = useSelector(state => state.user.isUser)
     const [inputs, setInputs] = useState({
         name: user?.name || "",
@@ -27,52 +28,63 @@ export default function UserProfileEdit() {
         email: user?.email || "",
         bio: user?.bio || "",
         password: "",
-        profilePic : user?.profilePic || ""
+        profilePic: user?.profilePic || ""
     })
     const fileref = useRef(null)
     const handleChange = (e) => {
-      const file = e.target.files[0]
-      const maxSize = 100 * 1024;
-      if(file.size > maxSize) {
-        showToast("filesize is too large" ,"warning")
-        fileref.current.value = '';
-        return;
-      } else {
-          setInputs({...inputs , profilePic : e.target.files[0]})
-      }
+        const file = e.target.files[0]
+        if (!file) {
+            return;
+        }
+        const maxSize = 100 * 1024;
+        if (file.size > maxSize) {
+            setShowUrl(null)
+            showToast("filesize is too large choose other image", "error")
+            fileref.current.value = '';
+            return;
+        } else {
+            setInputs({ ...inputs, profilePic: file})
+            const fileReader = new FileReader()
+            fileReader.onload = () => {
+                setShowUrl(fileReader.result)
+            }
+            fileReader.readAsDataURL(file)
+        }
+
     }
 
     const handleUpdate = async (e) => {
         e.preventDefault()
         if (sumbit) return;
-		SetSubmit(true);
+        SetSubmit(true);
         const formdata = new FormData();
         formdata.append("profilePic", inputs.profilePic)
         formdata.append("name", inputs.name)
-        formdata.append("username" , inputs.username)
+        formdata.append("username", inputs.username)
         formdata.append("email", inputs.email)
         formdata.append("bio", inputs.bio)
         formdata.append("password", inputs.password)
         try {
-            const request = await fetch(`/api/user/update/${user.id}`,{
+            const request = await fetch(`/api/user/update/${user.id}`, {
                 method: "PUT",
-				body:  formdata,
+                body: formdata,
             })
             const response = await request.json()
             console.log(response)
             dispatch(setUser(response))
             localStorage.setItem("user", JSON.stringify(response))
-            
+
         } catch (err) {
             console.log(err)
         } finally {
-           SetSubmit(false)
+            SetSubmit(false)
         }
-  
+
     }
     return (
         <form action="#" onSubmit={handleUpdate}>
             <Flex
+                mt={["20vw","20vw","9.5vw","7vw","5.5vw"]}
                 align={'center'}
                 justify={'center'}>
                 <Stack
@@ -83,7 +95,7 @@ export default function UserProfileEdit() {
                     rounded={'xl'}
                     boxShadow={'lg'}
                     p={6}
-                    >
+                >
                     <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
                         User Profile Edit
                     </Heading>
@@ -91,7 +103,7 @@ export default function UserProfileEdit() {
                         <FormLabel>User Icon / less than 100kb</FormLabel>
                         <Stack direction={['column', 'row']} spacing={6}>
                             <Center>
-                                <Avatar size="xl" src={user?.profilePic} />
+                                <Avatar size="xl" src={(showUrl || user?.profilePic) || `https://dummyimage.com/200.png/02f/fff&text=${user?.name}`} />
                             </Center>
                             <Center w="full">
                                 <Button w="full" onClick={() => fileref.current.click()}>Change Icon</Button>
@@ -105,7 +117,7 @@ export default function UserProfileEdit() {
                             placeholder="elonmusk"
                             _placeholder={{ color: 'gray.500' }}
                             type="text"
-                            onChange={(e) => setInputs({...inputs , name : e.target.value})}
+                            onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
                             value={inputs.name}
                         />
                     </FormControl>
@@ -115,7 +127,7 @@ export default function UserProfileEdit() {
                             placeholder="elon"
                             _placeholder={{ color: 'gray.500' }}
                             type="text"
-                            onChange={(e) => setInputs({...inputs , username : e.target.value})}
+                            onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
                             value={inputs.username}
                         />
                     </FormControl>
@@ -125,7 +137,7 @@ export default function UserProfileEdit() {
                             placeholder="hi i am founder of spaceX"
                             _placeholder={{ color: 'gray.500' }}
                             type="text"
-                            onChange={(e) => setInputs({...inputs , bio : e.target.value})}
+                            onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
                             value={inputs.bio}
                         />
                     </FormControl>
@@ -135,7 +147,7 @@ export default function UserProfileEdit() {
                             placeholder="elon@gmail.com"
                             _placeholder={{ color: 'gray.500' }}
                             type="email"
-                            onChange={(e) => setInputs({...inputs , email : e.target.value})}
+                            onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
                             value={inputs.email}
                         />
                     </FormControl>
@@ -145,12 +157,12 @@ export default function UserProfileEdit() {
                             placeholder="password"
                             _placeholder={{ color: 'gray.500' }}
                             type="password"
-                            onChange={(e) => setInputs({...inputs , password : e.target.value})}
+                            onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
                             value={inputs.password}
                         />
                     </FormControl>
                     <Stack spacing={6} direction={['column', 'row']}>
-                       
+
                         <Button
                             bg={'green.400'}
                             color={'white'}

@@ -1,0 +1,118 @@
+import { AddIcon } from '@chakra-ui/icons';
+import { useSelector } from 'react-redux';
+import { Box, Button, CloseButton, Flex, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, useDisclosure } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form'
+import useShowToast from '../hook/ShowToast';
+import { FaRegImage } from "react-icons/fa6";
+
+import React, { useRef, useState } from 'react'
+
+const CreatePost = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [textLimit , setTextLimit] = useState('')
+    const user  = useSelector(state => state.user.isUser)
+    const showToast = useShowToast()
+    const maxSize = 100 * 1024;
+    const [imgUrl , setImgUrl] = useState('')
+    const { register, formState: { errors }, handleSubmit, reset } = useForm()
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0]
+        if(file.size > maxSize){
+            setImgUrl(null)
+            showToast("filesize is too large choose other image", "error")
+            return;
+        } else {
+            const fileReader = new FileReader()
+            fileReader.onload = () => {
+                setImgUrl(fileReader.result)
+            }
+            fileReader.readAsDataURL(file)
+            setImgUrl(file)
+        }
+    }
+
+    const fileref = useRef(null)
+
+    const onFormSubmit =  async (data) => {
+        try {
+            const formData = new FormData()
+            formData.append('postedBy',user.id)
+            formData.append("img",imgUrl)
+            formData.append("text",data.text)
+            const request = await fetch('/api/post/create',{
+                method : 'POST',
+                body : formData
+            })
+            const response = await request.json()
+            console.log(response)
+            reset()
+            setImgUrl(null)
+            onClose()
+        } catch (err) {
+            console.log("Error in create post", err.message)
+        } 
+    }
+
+    return (
+        <>
+            <Button
+                position={"fixed"}
+                bottom={10}
+                bg="rgba(255, 255, 255, 0.2)"
+                backdropFilter="blur(8px)" 
+                right={10}
+                leftIcon={<AddIcon />}
+                onClick={onOpen}
+            >Post</Button>
+
+            <Modal isOpen={isOpen} onClose={onClose} >
+                <ModalOverlay />
+                <ModalContent w={["330px","330px","450px","450px","450px"]}>
+                    <ModalHeader>Create Your Post</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                       
+                        <form onSubmit={handleSubmit(onFormSubmit)}>
+                            <Textarea {...register("text", { required: "Text is required" })} mb={"15px"}/>
+                            {errors.text && <Text color={"red"} fontWeight="semibold" fontSize="sm">{errors.text.message}</Text>}
+                            <input type='file'
+                            onChange={handleFileChange}
+                            hidden ref={fileref} 
+                            />
+                            <Text>File size less 100kb</Text>
+                            <FaRegImage size={"18px"} onClick={() => fileref.current.click()} cursor={"pointer"} />
+                             
+                            {imgUrl && (
+                                <Flex w="full" position="relative" mt="5px">
+                                    <Image src={imgUrl} />
+                                     <CloseButton
+                                       position="absolute"
+                                       onClick={() => setImgUrl(null)}
+                                       top={2}
+                                       bg={"gray.500"}
+                                       right={2}
+                                     />
+                                </Flex>
+                            )}
+
+                            <ModalFooter>
+                                <Button bg={"red.500"} mr={3} onClick={onClose}
+                                 
+                                >
+                                    Close
+                                </Button>
+                                <Button type="submit" bg={"green.500"} >Submit</Button>
+                            </ModalFooter>
+                        </form>
+                    </ModalBody>
+
+
+                </ModalContent>
+            </Modal>
+
+        </>
+    )
+}
+
+export default CreatePost;

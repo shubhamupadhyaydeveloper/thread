@@ -15,9 +15,9 @@ import {
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { setUser } from '../store/reducer';
+import { setUser } from '../../store/reducer';
 import useShowToast from '../hook/ShowToast';
-import { setLogedin } from '../store/reducer';
+import { setLogedin } from '../../store/reducer'; 
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 export default function SignupCard() {
@@ -62,6 +62,7 @@ export default function SignupCard() {
     }
     return (
         <Flex
+        mt={["20vw","20vw","9.5vw","7vw","5.5vw"]}
         >
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>

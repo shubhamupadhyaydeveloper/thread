@@ -2,17 +2,14 @@ import { Text, Flex, Avatar, Box, Image } from '@chakra-ui/react';
 import { BsThreeDots } from "react-icons/bs";
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import Action from '../components/Action';
+import Action from "../components/Action"
 
-
-const Userpost = () => {
+const FeedPost = ({post , postedBY}) => {
    const [liked , setLiked] = useState(false)
 
    return (
-
-      <Link to={'/elonmusk/post/1'}>
-
-         <Flex gap={2} mt={5}>
+      <Link to={'/elonmusk/post/1'} >   
+         <Flex gap={2} mt={["20vw","20vw","9.5vw","8vw","5vw"]}>
             <Flex direction={"column"} alignItems={"center"}>
                <Avatar
                   src='/elon_avatar.jpg'
@@ -37,8 +34,8 @@ const Userpost = () => {
                      <Box size={"md"}><BsThreeDots /></Box>
                   </Flex>
                </Flex>
-               <Text mt={2} mb={3}>This is my first thread</Text>
-               <Image src='/post3.png' w={"full"} borderRadius={"14px"} />
+               <Text mt={2} mb={3}>{post?.text}</Text>
+               <Image src={post?.img} w={"full"} borderRadius={"14px"} />
                <Action liked={liked} setLiked={setLiked}/>
                <Flex color={"gray.light"} mt="-2" alignItems={"center"} gap={2}> 
                   <Text> 454 replies</Text>
@@ -52,4 +49,4 @@ const Userpost = () => {
    )
 }
 
-export default Userpost;
+export default FeedPost;
