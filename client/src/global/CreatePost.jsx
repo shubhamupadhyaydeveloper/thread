@@ -9,7 +9,7 @@ import React, { useRef, useState } from 'react'
 
 const CreatePost = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [textLimit , setTextLimit] = useState('')
+    const [update , setUpdate] = useState(false)
     const user  = useSelector(state => state.user.isUser)
     const showToast = useShowToast()
     const maxSize = 100 * 1024;
@@ -35,6 +35,7 @@ const CreatePost = () => {
     const fileref = useRef(null)
 
     const onFormSubmit =  async (data) => {
+        setUpdate(true)
         try {
             const formData = new FormData()
             formData.append('postedBy',user.id)
@@ -48,10 +49,13 @@ const CreatePost = () => {
             console.log(response)
             reset()
             setImgUrl(null)
+            showToast("Post created sucessfully","success")
             onClose()
         } catch (err) {
             console.log("Error in create post", err.message)
-        } 
+        } finally {
+            setUpdate(false)
+        }
     }
 
     return (
@@ -98,11 +102,11 @@ const CreatePost = () => {
 
                             <ModalFooter>
                                 <Button bg={"red.500"} mr={3} onClick={onClose}
-                                 
+                                   disabled={update}
                                 >
                                     Close
                                 </Button>
-                                <Button type="submit" bg={"green.500"} >Submit</Button>
+                                <Button type="submit" bg={"green.500"} isLoading={update} >Submit</Button>
                             </ModalFooter>
                         </form>
                     </ModalBody>

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import React from 'react'
 import { HiMiniHome } from "react-icons/hi2";
 import { Link } from 'react-router-dom';
@@ -11,7 +11,7 @@ const Backtohome = () => {
                     <Box>
                     <HiMiniHome size={"25px"} />
                     </Box>
-                    <Text textAlign={"center"} fontSize={"md"}>Home</Text>
+                    <Text textAlign={"center"} fontSize={"md"} visibility={["hidden",'visible']}>Home</Text>
                    </Flex>
                 </Link>
         </Flex>

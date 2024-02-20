@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { ChakraBaseProvider, Spinner } from '@chakra-ui/react'
+import { ChakraBaseProvider, } from '@chakra-ui/react'
 import { extendTheme } from '@chakra-ui/react'
 import { Provider } from 'react-redux'
 import { store } from '../store/store.js'
@@ -9,8 +9,6 @@ import { mode } from '@chakra-ui/theme-tools'
 import { ColorModeScript } from '@chakra-ui/react'
 import App from './App.jsx'
 import './index.css'
-import Loader from './global/Loader.jsx'
-import { SkeletonTheme } from 'react-loading-skeleton'
 
 const styles = {
   global: (props) => ({
@@ -37,15 +35,13 @@ const theme = extendTheme({ config, colors, styles })
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-   <SkeletonTheme baseColor='#313131' highlightColor='#525252'>
     <Provider store={store}>
-    <BrowserRouter>
-      <ChakraBaseProvider theme={theme}>
-        <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-        <App />
-      </ChakraBaseProvider>
-    </BrowserRouter>
+      <BrowserRouter>
+        <ChakraBaseProvider theme={theme}>
+          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <App />
+        </ChakraBaseProvider>
+      </BrowserRouter>
     </Provider>
-   </SkeletonTheme>
   </React.StrictMode>,
 )

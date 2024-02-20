@@ -11,6 +11,7 @@ import {
     Center,
 } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
 import { setUser } from '../../store/reducer'
 import { useRef, useState } from 'react'
 import useShowToast from '../hook/ShowToast';
@@ -18,6 +19,7 @@ import useShowToast from '../hook/ShowToast';
 
 export default function Update() {
     const dispatch = useDispatch()
+    const navigate = useNavigate();
     const [showUrl, setShowUrl] = useState(null)
     const showToast = useShowToast()
     const [sumbit, SetSubmit] = useState(false)
@@ -49,7 +51,7 @@ export default function Update() {
                 setShowUrl(fileReader.result)
             }
             fileReader.readAsDataURL(file)
-        }
+        } 
 
     }
 
@@ -78,6 +80,7 @@ export default function Update() {
             console.log(err)
         } finally {
             SetSubmit(false)
+            navigate(`/${user?.username}`)
         }
 
     }

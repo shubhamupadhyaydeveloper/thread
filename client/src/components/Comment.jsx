@@ -4,10 +4,9 @@ import React, { useState } from 'react'
 import Action from './Action';
 
 const Comment = () => {
-    const [liked , setLiked] = useState(false)
     return (
         <>
-        <Flex gap={3} w={"full"} mt={4} >
+        <Flex gap={3} w={"full"} >
             <Avatar size="xs" src='https://bit.ly/dan-abramov' mt="1"/>
             <Flex direction="column" alignItems="start" w="full">
                 <Flex gap={2} justifyContent="space-between" w="full" alignItems={"center"}>
@@ -18,8 +17,7 @@ const Comment = () => {
                     </Flex>
                 </Flex>
                 <Text>I love this post! Looks really cool</Text>
-                <Action liked={liked} setLiked={setLiked}/>
-                <Text mt="-2" mb="1" color="gray.light">{liked ? 1 + 12 : 12}likes</Text>
+                <Action />
             </Flex>
         </Flex>
         <Divider/>

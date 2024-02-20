@@ -4,10 +4,11 @@ import Action from './Action';
 import React, { useState } from 'react'
 import Comment from './Comment';
 
-const Postpage = () => {
-    const [liked , setLiked] = useState(false)
+const Postpage = ({post}) => {
     return (
-        <Flex alignItems={"start"} direction={"column"}>
+        <Flex alignItems={"start"} direction={"column"}
+        mt={["20vw","20vw","9.5vw","7vw","5.5vw"]}
+        >
             <Flex justifyContent={"space-between"} w="full">
                 <Flex gap={2} alignItems={"center"}>
                     <Avatar size={"md"} src='/elon_avatar.jpg' />
@@ -21,12 +22,7 @@ const Postpage = () => {
             </Flex>
             <Text mt={4} mb={2}>Let's talk about Threads</Text>
             <Image w="full" borderRadius="12px" src='/elon_speech.jpg' />
-            <Action liked={liked} setLiked={setLiked}/>
-            <Flex color={"gray.light"} alignItems={"center"} gap={2}>
-                <Text>123 replies</Text>
-                <Box w='3px' h={"3px"} borderRadius="50px" bg='gray.light' my={2}></Box>
-                <Text>{liked ? 1 + 453 : 453} likes</Text>
-            </Flex>
+            <Action post={post}/>
             <Divider mt={3}/>
             <Flex justifyContent="space-between" w="full" alignItems="center" mt={3}>
                <Flex  gap={2}> 

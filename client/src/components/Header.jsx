@@ -26,14 +26,14 @@ const Header = () => {
             alignItems={"center"}
             marginBottom={"4rem"}
           > 
-          <Flex w={["320px","375px","630px"]} justifyContent={"space-between"}>
+          <Flex w={["320px","375px","730px"]} justifyContent={"space-between"}>
             <Backtohome/>
             <Image
               alt='logo'
               w={8}
               src={colorMode === 'dark' ? "/light-logo.svg" : "/dark-logo.svg"}
             />
-            <Flex gap={5} alignItems={"center"}>
+            <Flex gap={["3","3","4","5","5"]} alignItems={"center"}>
               <ToggleButton />
               <Link to={`/${user?.username}`}>
               <FaUser cursor={"pointer"} size={"20px"}/>

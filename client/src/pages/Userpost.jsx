@@ -1,21 +1,30 @@
 import { Text, Flex, Avatar, Box, Image } from '@chakra-ui/react';
 import { BsThreeDots } from "react-icons/bs";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import Action from "../components/Action"
 
 
-const Userpost = () => {
-   const [liked , setLiked] = useState(false)
+const Userpost = ({post,postedBy}) => {
+   const [user ,setUser] =  useState('')
+
+   useEffect(() => {
+      const getProfile = async () => {
+        const request = await fetch(`/api/user/profile/${postedBy}`)
+        const response  = await request.json()
+        setUser(response)
+      }
+      getProfile()
+   },[])
 
    return (
 
       <Link to={'/elonmusk/post/1'}>
 
-         <Flex gap={2} mt={5}>
+         <Flex gap={2} mt={["20vw","20vw","9.5vw","8vw","5vw"]}>
             <Flex direction={"column"} alignItems={"center"}>
                <Avatar
-                  src='/elon_avatar.jpg'
+                  src={user?.profilePic}
                />
                <Box w='1px' h={"full"} bg='gray.light' my={2}></Box>
                <Flex position={"relative"}>
@@ -29,7 +38,7 @@ const Userpost = () => {
             <Flex direction={"column"}>
                <Flex justifyContent={"space-between"} w={"full"}>
                   <Flex gap={1} alignItems={"center"}>
-                     <Text fontWeight={"bold"}>elonmusk</Text>
+                     <Text fontWeight={"bold"}>{user?.username}</Text>
                      <Image w={"20px"} h={"20px"} src='/verified.png' />
                   </Flex>
                   <Flex gap={2} alignItems={"center"}>
@@ -37,14 +46,9 @@ const Userpost = () => {
                      <Box size={"md"}><BsThreeDots /></Box>
                   </Flex>
                </Flex>
-               <Text mt={2} mb={3}>This is my first thread</Text>
-               <Image src='/post3.png' w={"full"} borderRadius={"14px"} />
-               <Action liked={liked} setLiked={setLiked}/>
-               <Flex color={"gray.light"} mt="-2" alignItems={"center"} gap={2}> 
-                  <Text> 454 replies</Text>
-                  <Box w='3px' h={"3px"} borderRadius="50px" bg='gray.light' my={2}></Box>
-                  <Text>{liked ? 1 + 123 : 123} likes</Text>
-               </Flex>
+               <Text mt={2} mb={3}>{post?.text}</Text>
+               <Image src={post?.img} w={"full"} borderRadius={"14px"} />
+               <Action post={post} />
             </Flex>
          </Flex>
       </Link>

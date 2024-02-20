@@ -46,7 +46,7 @@ const Homepage = () => {
       <Flex   justifyContent={"center"} alignItems={"center"} flexDirection="column" mt={"5vh"} >
         <Image src='/home.svg'  _focus={{ outline: 'none' }} w={"50vw"} mt={"10vh"} />
         <Text mt={"5vh"} fontWeight={['md','md','semibold',"bold"]} fontSize={["md","md","xl","2xl"]}>Follow Users for Feed</Text>
-        <RecommendUser/>
+        <RecommendUser />
       </Flex>
     )
   }
@@ -57,7 +57,7 @@ const Homepage = () => {
              <FeedPost key={`post-${item._id}`} post={item} postedBy={item.postedBy}/>
        ))}
       </Box>
-      <RecommendUser/>
+      <RecommendUser />
     </>
   )
       

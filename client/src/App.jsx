@@ -15,7 +15,7 @@ function App() {
 
   return (
     <>
-      <Container maxW="630px" mx={"auto"}>
+      <Container maxW="730px" mx={"auto"}>
         <Header />
         <Routes>
           <Route path="/" element={user ? <Homepage/> : <Navigate to="/auth" />} />

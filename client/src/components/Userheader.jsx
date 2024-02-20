@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { FaInstagram } from "react-icons/fa";
 import { PiDotsThreeCircle } from "react-icons/pi";
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
 import { VStack, Box, Flex, Text, Avatar, Menu, MenuButton, MenuList, Portal, MenuItem, Button } from '@chakra-ui/react';
 import useShowToast from '../hook/ShowToast';
 import { Link } from 'react-router-dom';
@@ -47,14 +45,15 @@ const Userheader = ({ user }) => {
     <VStack
       gap={4}
       alignItems={"start"}
-      mt={["20vw","20vw","9.5vw","6vw","5vw"]}
+      mt={["20vw","20vw","9.5vw","5.5vw","5.5vw"]}
+      mb={["-10vw","-10vw","-6vw","-6vw","-3vw"]}
     >
       <Flex justifyContent={"space-between"} w={"full"}>
         <Box>
-          <Text fontWeight={'bold'} fontSize='30px'>{user?.name || <Skeleton />}</Text>
+          <Text fontWeight={'bold'} fontSize='30px'>{user?.name }</Text>
           <Flex >
             <Flex gap={3}>
-              <Text >{user?.username || <Skeleton width={"50px"} count={1} />}</Text>
+              <Text >{user?.username}</Text>
               <Text
                 borderRadius={'full'}
                 bg={"gray.600"}
