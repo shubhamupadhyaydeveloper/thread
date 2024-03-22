@@ -101,11 +101,6 @@ const CreatePost = () => {
                             )}
 
                             <ModalFooter>
-                                <Button bg={"red.500"} mr={3} onClick={onClose}
-                                   disabled={update}
-                                >
-                                    Close
-                                </Button>
                                 <Button type="submit" bg={"green.500"} isLoading={update} >Submit</Button>
                             </ModalFooter>
                         </form>

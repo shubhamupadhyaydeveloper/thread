@@ -17,6 +17,10 @@ const FeedPost = ({post , postedBy}) => {
       getProfile()
    },[])
 
+   if(!user) {
+      return null
+   }
+
    return (
       <Link to={'/elonmusk/post/1'} >   
          <Flex gap={2} mt={["20vw","20vw","9.5vw","8vw","5vw"]}>

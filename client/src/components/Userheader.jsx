@@ -10,7 +10,7 @@ const Userheader = ({ user }) => {
   const showToast = useShowToast()
   const [updating, setUpdating] = useState(false)
   const currentUser = useSelector(state => state.user.isUser)
-  const [follower, setFollower] = useState(user.followers.includes(currentUser.id))
+  const [follower, setFollower] = useState(user?.followers?.includes(currentUser.id))
 
   const handleClick = async () => {
     setUpdating(true)
@@ -75,7 +75,7 @@ const Userheader = ({ user }) => {
 
       <Flex justifyContent={"space-between"} w={'full'} mb={4}>
         <Flex gap={2} alignItems={"center"}>
-          <Text color={"gray.light"}>{user.followers.length} followers</Text>
+          <Text color={"gray.light"}>{user?.followers?.length || 0} followers</Text>
           <Box w='1' h='1' bg={"gray.light"} borderRadius={"full"}></Box>
           <Text color={"gray.light"}>instagram.com</Text>
         </Flex>

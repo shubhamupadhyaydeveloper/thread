@@ -1,84 +1,67 @@
 import { Flex, Image, Spinner, Text } from '@chakra-ui/react';
-import React, { Suspense, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import useShowToast from '../hook/ShowToast';
 import Userheader from '../components/Userheader';
 import Userpost from './Userpost';
 import { useParams } from 'react-router-dom';
 
 const Userpage = () => {
-  const showToast = useShowToast()
-  const [post, setPost] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [postLoading, setPostLoading] = useState(true)
   const [user, setUser] = useState('')
   const { username } = useParams()
-
-  useEffect(() => {
-    const fetchData = async () => {
+  const [post, setPost] = useState([])
+  const {isLoading} = useQuery({
+    queryKey: ['getuserdata', username],
+    queryFn: async () => {
       try {
-        setLoading(true)
-        const request = await fetch(`/api/user/profile/${username}`);
-        const response = await request.json()
-
-        if (response.message) {
-          showToast(response.message, "error")
-        } else {
-          setUser(response)
+        const request = await fetch(`/api/user/getuserdata/${username}`);
+        if(!request.ok) {
+          return 'User not found'
         }
-      } catch (err) {
-        console.log("Error in fetch user", err.message)
-      } finally {
-        setLoading(false)
+        const userData = await request.json();
+        setUser({
+          _id: userData?._id,
+          name: userData?.name,
+          username: userData?.username,
+          profilePic: userData?.profilePic,
+          bio: userData?.bio,
+          followers: userData?.followers,
+        });
+        setPost(userData?.posts);
+        return userData;
+      } catch (error) {
+        console.log(object)
       }
     }
-    
-    const getUserPost = async () => {
-      setPostLoading(true)
-      try {
-          const request = await fetch(`/api/user/post/${username}`);
-          const response = await request.json();
-          setPost(response)
-      } catch (error) {
-        console.error('Error in getUserPost:', error.message);
-      } finally {
-        setPostLoading(false)
-      }
-    };
-    
-    fetchData()
-    getUserPost()
-
-  }, [username, user._id])
+  })
 
 
-  if (!user && loading) {
+  if (!user && isLoading) {
     return (
       <Flex justifyContent="center" alignItems="center" h="100px">
         <Spinner size="xl" mt={"15vh"} />
       </Flex>
     )
   }
-
-  if (!user && !loading) return (
-    <Flex flexDirection={"column"} alignItems={"center"} gap={3}>
-      <Image src='/notfound.svg' mt={["65vw", "65vw", "25vw", "15vw"]} />
-      <Text fontWeight={"bold"} fontSize={"2xl"}>Page not found</Text>
-    </Flex>
+  if (!user && !isLoading) return (
+    <>
+       <Text fontWeight={'semibold'} fontSize={"2xl"} mt={'10vh'}>User Not Found</Text>
+    </>
   )
 
   return (
     <>
-      <Userheader user={user} />
-      {
-         postLoading && (
-          <Flex justifyContent="center" alignItems="center" h="100px">
-            <Spinner size="xl" mt={"10vh"} />
+      <Userheader user={user} /> 
+      {post?.length === 0 ? (
+        <>
+          <Flex alignItems={"center"} gap={"2rem"} flexDirection={"column"} mb={"2rem"}>
+            <Text mt={"5rem"} fontWeight={"bold"} fontSize={"2xl"}>No Post Yet ,Create Post</Text>
+            <Image src='/nopost.svg' width={["", "", "30rem", "30rem", "30rem"]} />
           </Flex>
-        )
-      }
-      {post && (
-        post.map((item) => (
-          <Userpost key={`hello-use${item._id}`} post={item} postedBy={item.postedBy} />
+        </>
+      ) : (
+        post?.map((item) => (
+          <Userpost key={`hello-use${item?._id}`} post={item} user={user} />
         ))
       )}
     </>

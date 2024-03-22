@@ -1,26 +1,13 @@
 import { Text, Flex, Avatar, Box, Image } from '@chakra-ui/react';
 import { BsThreeDots } from "react-icons/bs";
-import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import Action from "../components/Action"
 
 
-const Userpost = ({post,postedBy}) => {
-   const [user ,setUser] =  useState('')
-
-   useEffect(() => {
-      const getProfile = async () => {
-        const request = await fetch(`/api/user/profile/${postedBy}`)
-        const response  = await request.json()
-        setUser(response)
-      }
-      getProfile()
-   },[])
-
+const Userpost = ({post,user}) => {
    return (
 
       <Link to={'/elonmusk/post/1'}>
-
          <Flex gap={2} mt={["20vw","20vw","9.5vw","8vw","5vw"]}>
             <Flex direction={"column"} alignItems={"center"}>
                <Avatar

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 
 const RecommendUser = () => {
     const [user, setUser] = useState([]);
-
     useEffect(() => {
         const getUser = async () => {
             const request = await fetch('/api/user/recommended');
@@ -15,8 +14,7 @@ const RecommendUser = () => {
     }, []);
 
     return (
-        <Flex flexDirection={"column"} alignItems={"center"} mt={["20vw", "20vw", "8vw", "7vw", "7vw"]} position={"relative"} mb={'3vw'}>
-            <Text fontWeight={['normal', 'normal', 'semibold', 'bold']} fontSize={"xl"}>Recommended User</Text>
+        <Flex flexDirection={"column"} alignItems={"center"} mt={["16vw", "16vw", "3vw", "2vw", "2vw"]} position={"relative"} mb={'3vw'}>
             {user && user.map((item) => (
                 <Flex key={`user-${item._id}`} gap={3} w={["300px", "300px", "350px", "400px"]} mt={5} flexDirection={"column"}>
                     <Flex justifyContent={"space-between"} alignItems={"center"}>
